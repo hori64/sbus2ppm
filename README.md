@@ -1,7 +1,10 @@
 # sbus2ppm
 SBUS-PPM konverter
 
-Sok hasonló megoldás található és készen is lehet venni, de még az olcsó is drága, ahhoz képest, hogy nem egy nagybonyolultságú kütyürõl van szó. :)
-Két project összefésülése:
+Sok hasonlÃ³ megoldÃ¡s talÃ¡lhatÃ³ Ã©s kÃ©szen is lehet venni, de mÃ©g az olcsÃ³ is drÃ¡ga, ahhoz kÃ©pest, hogy nem egy nagybonyolultsÃ¡gÃº kÃ¼tyÃ¼rÅ‘l van szÃ³. :)
+
+KÃ©t project Ã¶sszefÃ©sÃ¼lÃ©se:
+
 https://github.com/Hasi123/generate-ppm-signal
+
 https://github.com/mikeshub/FUTABA_SBUS

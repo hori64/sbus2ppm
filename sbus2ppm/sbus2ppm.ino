@@ -3,13 +3,13 @@ FUTABA_SBUS sBus;
 
 //////////////////////CONFIGURATION///////////////////////////////
 #define chanel_number 8  //set the number of chanels
-#define default_servo_value 1500  //set the default servo value
 #define PPM_FrLen 28000  //set the PPM frame length in microseconds (1ms = 1000µs)
 #define PPM_PulseLen 400  //set the pulse length
 #define Servo_Min 870  //set the minimum servo value
 #define Servo_Max 2135  //set the maximum servo value
 #define onState 0  //set polarity of the pulses: 1 is positive, 0 is negative
 #define sigPin 2  //set PPM signal output pin on the arduino
+#define ledPin 13  //set LED pin on the arduino
 
 //////////////////////////////////////////////////////////////////
 
@@ -19,14 +19,17 @@ FUTABA_SBUS sBus;
 int ppm[chanel_number];
 
 void setup(){ 
-  sBus.begin(); 
-  //initiallize default ppm values
-  for(int i=0; i<chanel_number; i++){
-    ppm[i]= default_servo_value;
-  }
-
   pinMode(sigPin, OUTPUT);
+  pinMode(ledPin, OUTPUT);
   digitalWrite(sigPin, !onState);  //set the PPM signal pin to the default state (off)
+  sBus.begin(); 
+  do
+  {
+    sBus.FeedLine();
+  }while(!sBus.toChannels);
+    
+  //initiallize ppm values
+  updatePPM();
   
   cli();
   TCCR1A = 0; // set entire TCCR1 register to 0
@@ -42,15 +45,21 @@ void setup(){
 void loop(){
   sBus.FeedLine();
   if (sBus.toChannels == 1){
-    sBus.UpdateChannels();
-    sBus.toChannels = 0;
-    for(int i=0; i<chanel_number; i++){
-      ppm[i]= map(sBus.channels[i],0,2047,Servo_Min,Servo_Max);
-      //ppm[i]= sBus.channels[i];
+    updatePPM();
+  }
+  digitalWrite(ledPin, LOW);
+ 
+}
 
-    }
+void updatePPM(){
+  digitalWrite(ledPin, HIGH);
+  sBus.UpdateChannels();
+  sBus.toChannels = 0;
+  for(int i=0; i<chanel_number; i++){
+    ppm[i]= map(sBus.channels[i],0,2047,Servo_Min,Servo_Max);
   }
 }
+
 
 ISR(TIMER1_COMPA_vect){  //leave this alone
   static boolean state = true;
